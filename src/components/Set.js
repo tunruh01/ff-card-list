@@ -11,7 +11,7 @@ export default class Set extends Component {
     render() {
         return <div>
             <SetHeader setData={this.props.setData}/>
-            <CardList setData={this.props.setData}/>
+            <CardList displayMode={this.props.displayMode} setData={this.props.setData}/>
         </div>
     }
 }

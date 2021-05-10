@@ -1,9 +1,11 @@
 import './App.css';
-import CardView from './components/CardView'
+import Collection from './components/Collection'
+import * as smoothscroll from "smoothscroll-polyfill";
+smoothscroll.polyfill();
 function App() {
   return (
     <div className="App">
-      <CardView/>
+      <Collection/>
     </div>
   );
 }

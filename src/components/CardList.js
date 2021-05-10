@@ -7,12 +7,13 @@ export default class CardList extends Component {
 
         this.props.setData.cards.forEach((card, card_index) => {
             //if(card.current_playset_amount < 3) {
-                displayed_cards.push(<Card key={card_index} card={card}/>)
+                displayed_cards.push(<Card displayMode={this.props.displayMode} key={card_index} card={card}/>)
             //}
         })
 
         return <div className='card-set'>
-            {displayed_cards}
+            {displayed_cards.length > 0 && displayed_cards}
+            {displayed_cards.length <= 0 && <div>No Results for Set.</div>}
         </div>
     }
 }

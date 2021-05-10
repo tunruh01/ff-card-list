@@ -1,22 +1,24 @@
 import React, { Component } from "react";
 import { readRemoteFile } from 'react-papaparse'
-import FFDecksData from '../test_data/ffdecks';
+//import FFDecksData from '../test_data/ffdecks';
 import ClipLoader from "react-spinners/ClipLoader";
 import Results from './Results'
 import WantTradeHeader from './WantTradeHeader'
 
-export default class CardView extends Component {
+export default class Collection extends Component {
     constructor(props) {
         super(props);
         this.state = {
             promo_card_data: null,
-            ffdecks_data: FFDecksData,
+            ffdecks_data: null,
             collection_data: null,
             card_set_data: null,
             display_mode: 'want',
-            scroll_pos: {
-                'want': 0,
-                'need': 0
+            scroll_pos: {},
+            filters: {
+                'want': { sets: ['All'], rarities: ['All'] },
+                'trade':  { sets: ['All'], designs: ['All'], rarities: ['L', 'H', 'PR Only'] },
+                'trade-down':  { sets: ['All'], designs: ['All'], rarities: ['L', 'H'] }
             }
         }
     }
@@ -44,8 +46,6 @@ export default class CardView extends Component {
                 merged_data.push(merged_card);
             })
 
-            // console.log(merged_data);
-
             this.state.collection_data.forEach((row, index) => {
                 if(index > 0)
                 {
@@ -71,7 +71,7 @@ export default class CardView extends Component {
                     let existing_index = merged_data.findIndex(item => item.serial === look_serial)
                     if(existing_index >= 0)
                     {
-                        merged_data[existing_index].quantities.push({design_type: row[3], quantity: parseInt(row[1]), playset_important: false})
+                        merged_data[existing_index].quantities.push({design_type: row[3].replace('Full Art', 'FA').replace('Prerelease', 'PreR').replace('Promo', 'PR').replace('Alternate', 'Alt') , quantity: parseInt(row[1]), playset_important: false})
                     }
                     else {
                         console.log('missing serial from promos' + look_serial)
@@ -80,7 +80,7 @@ export default class CardView extends Component {
                         merged_card.serial = row[0];
                         merged_card.quantities = [];
                         merged_card.quantities.push({design_type: 'Regular', quantity: 0, playset_important: true})
-                        merged_card.quantities.push({design_type: row[3], quantity: parseInt(row[1]), playset_important: false})
+                        merged_card.quantities.push({design_type: row[3].replace('Full Art', 'FA').replace('Prerelease', 'PreR').replace('Promo', 'PR').replace('Alternate', 'Alt'), quantity: parseInt(row[1]), playset_important: false})
                         merged_card.current_playset_amount = 0;
                         merged_card.current_non_foil_playset_amount = 0;
                         merged_card.opus = merged_card.serial[1] === '-' ? merged_card.serial[0] : merged_card.serial.substring(0,2);
@@ -130,13 +130,13 @@ export default class CardView extends Component {
                 }
             }
         )
-        // fetch("http://ffdecks.com/api/cards/basic")
-        //     .then(res => res.json())
-        //     .then(res => {
-        //             this.setState({ffdecks_data: res})
-        //             console.log('ffdecks_data_fetched')
-        //         }
-        //     )
+        fetch("https://ffdecks.com/api/cards/basic")
+            .then(res => res.json())
+            .then(res => {
+                    this.setState({ffdecks_data: res})
+                    console.log('ffdecks_data_fetched')
+                }
+            )
     }
 
     setDisplayMode = (mode) => {
@@ -149,13 +149,34 @@ export default class CardView extends Component {
         this.setState({scroll_pos: scroll_data})
     }
 
+    updateFilter = (filter_type, filter) => {
+        let filter_data = {...this.state.filters};
+
+        if(filter === 'All' || filter_type === 'sets' || filter_data[this.state.display_mode][filter_type].includes('All'))
+        {
+            filter_data[this.state.display_mode][filter_type] = [];
+            filter_data[this.state.display_mode][filter_type].push(filter);
+        }
+        else if(filter_data[this.state.display_mode][filter_type].includes(filter)) {
+            const index = filter_data[this.state.display_mode][filter_type].indexOf(filter);
+            if (index > -1) {
+                filter_data[this.state.display_mode][filter_type].splice(index, 1);
+            }
+        }
+        else {
+            filter_data[this.state.display_mode][filter_type].push(filter);
+        }
+
+        this.setState({filters: filter_data})
+    }
+
     render() {
         if(!!this.state.card_set_data) {
             return <div style={{height:'100%'}}>
                 <WantTradeHeader changeDisplay={this.setDisplayMode} displayMode={this.state.display_mode}/>
-                {this.state.display_mode === 'want' && <Results setScrollPos={this.setScrollPos} initialScrollPos={this.state.scroll_pos['want']} cardData={this.state.card_set_data.filter((set) => set.opus === '1' || set.opus === '2')} displayMode={this.state.display_mode}/>}
-                {this.state.display_mode === 'trade' && <Results setScrollPos={this.setScrollPos} initialScrollPos={this.state.scroll_pos['trade']} cardData={this.state.card_set_data.filter((set) => set.opus === '3' || set.opus === '4')} displayMode={this.state.display_mode}/>}
-                {this.state.display_mode === 'trade-down' && <Results setScrollPos={this.setScrollPos} initialScrollPos={this.state.scroll_pos['trade-down']} cardData={this.state.card_set_data.filter((set) => set.opus === '5' || set.opus === '6')} displayMode={this.state.display_mode}/>}
+                {this.state.display_mode === 'want' && <Results filters={this.state.filters['want']} updateFilter={this.updateFilter} setScrollPos={this.setScrollPos} initialScrollPos={this.state.scroll_pos['want']} cardData={this.state.card_set_data} displayMode={this.state.display_mode}/>}
+                {this.state.display_mode === 'trade' && <Results filters={this.state.filters['trade']} updateFilter={this.updateFilter} setScrollPos={this.setScrollPos} initialScrollPos={this.state.scroll_pos['trade']} cardData={this.state.card_set_data} displayMode={this.state.display_mode}/>}
+                {this.state.display_mode === 'trade-down' && <Results filters={this.state.filters['trade-down']} updateFilter={this.updateFilter} setScrollPos={this.setScrollPos} initialScrollPos={this.state.scroll_pos['trade-down']} cardData={this.state.card_set_data.filter(set => set.opus !== 'PR')} displayMode={this.state.display_mode}/>}
             </div>
         }
         else {
