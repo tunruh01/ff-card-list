@@ -115,7 +115,7 @@ export default class Collection extends Component {
 
     componentDidMount() {
         readRemoteFile(
-            "https://docs.google.com/spreadsheets/d/e/2PACX-1vTNKDBLs5ncNghesIYn2C4JlnJ5TZBNUmPZRsjAk9tyVxqoAcTs69QijdIo0Ys3_svdyCXwDlf814J5/pub?gid=0&single=true&output=csv",
+            "https://docs.google.com/spreadsheets/d/e/2PACX-1vTNKDBLs5ncNghesIYn2C4JlnJ5TZBNUmPZRsjAk9tyVxqoAcTs69QijdIo0Ys3_svdyCXwDlf814J5/pub?output=csv",
             {
                 complete: (results) => {
                     this.setState({promo_card_data: results.data})
@@ -123,7 +123,7 @@ export default class Collection extends Component {
             }
         )
         readRemoteFile(
-            "https://docs.google.com/spreadsheets/d/e/2PACX-1vQyqsRmAvUeC9CXLXgZCyFTQBtGt6g6qq94q7USpcS8PeP7Z0o9iA3j5DoYqkFG6YGYMpv6_VqNtALC/pub?gid=1646712877&single=true&output=csv",
+            "https://docs.google.com/spreadsheets/d/e/2PACX-1vQyqsRmAvUeC9CXLXgZCyFTQBtGt6g6qq94q7USpcS8PeP7Z0o9iA3j5DoYqkFG6YGYMpv6_VqNtALC/pub?output=csv",
             {
                 complete: (results) => {
                     this.setState({collection_data: results.data})
