@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import SetHeader from './SetHeader'
+import CardList from './CardList'
 
 export default class Set extends Component {
     constructor(props) {
@@ -23,8 +25,8 @@ export default class Set extends Component {
         })
 
         return <div>
-            <div>{this.props.setData.opus === 'PR' ? 'Promo Exclusive' : `Opus ${this.props.setData.opus}`}</div>
-            {displayed_cards}
+            <SetHeader setData={this.props.setData}/>
+            <CardList setData={this.props.setData}/>
         </div>
     }
 }

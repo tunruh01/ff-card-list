@@ -27,6 +27,7 @@ export default class CardView extends Component {
             this.state.ffdecks_data.cards.forEach(card => {
                 let merged_card = {};
                 merged_card.name = card.name;
+                merged_card.image = card.image;
                 merged_card.serial = card.serial_number;
                 merged_card.serial += card.rarity !== 'Promo' ? card.rarity[0] : '';
                 merged_card.quantities = [];

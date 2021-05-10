@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import CardView from './components/CardView'
 function App() {
