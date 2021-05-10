@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/ff-card-list/static/css/main.92bf6ac7.chunk.css",
-    "main.js": "/ff-card-list/static/js/main.4a5493f3.chunk.js",
-    "main.js.map": "/ff-card-list/static/js/main.4a5493f3.chunk.js.map",
+    "main.css": "/ff-card-list/static/css/main.8319ee27.chunk.css",
+    "main.js": "/ff-card-list/static/js/main.bd9ede6a.chunk.js",
+    "main.js.map": "/ff-card-list/static/js/main.bd9ede6a.chunk.js.map",
     "runtime-main.js": "/ff-card-list/static/js/runtime-main.65dbb4fb.js",
     "runtime-main.js.map": "/ff-card-list/static/js/runtime-main.65dbb4fb.js.map",
     "static/js/2.9d674b32.chunk.js": "/ff-card-list/static/js/2.9d674b32.chunk.js",
@@ -10,13 +10,13 @@
     "static/js/3.4a141fc8.chunk.js": "/ff-card-list/static/js/3.4a141fc8.chunk.js",
     "static/js/3.4a141fc8.chunk.js.map": "/ff-card-list/static/js/3.4a141fc8.chunk.js.map",
     "index.html": "/ff-card-list/index.html",
-    "static/css/main.92bf6ac7.chunk.css.map": "/ff-card-list/static/css/main.92bf6ac7.chunk.css.map",
+    "static/css/main.8319ee27.chunk.css.map": "/ff-card-list/static/css/main.8319ee27.chunk.css.map",
     "static/js/2.9d674b32.chunk.js.LICENSE.txt": "/ff-card-list/static/js/2.9d674b32.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.65dbb4fb.js",
     "static/js/2.9d674b32.chunk.js",
-    "static/css/main.92bf6ac7.chunk.css",
-    "static/js/main.4a5493f3.chunk.js"
+    "static/css/main.8319ee27.chunk.css",
+    "static/js/main.bd9ede6a.chunk.js"
   ]
 }
