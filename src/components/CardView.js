@@ -3,6 +3,7 @@ import { readRemoteFile } from 'react-papaparse'
 import FFDecksData from '../test_data/ffdecks';
 import ClipLoader from "react-spinners/ClipLoader";
 import Results from './Results'
+import WantTradeHeader from './WantTradeHeader'
 
 export default class CardView extends Component {
     constructor(props) {
@@ -12,6 +13,11 @@ export default class CardView extends Component {
             ffdecks_data: FFDecksData,
             collection_data: null,
             card_set_data: null,
+            display_mode: 'want',
+            scroll_pos: {
+                'want': 0,
+                'need': 0
+            }
         }
     }
 
@@ -85,7 +91,8 @@ export default class CardView extends Component {
 
             for(let i = 0; i < merged_data.length; i++)
             {
-                merged_data[i].current_playset_amount = Math.min(3, merged_data[i].quantities.reduce((total, quantity) => total + quantity.quantity, 0))
+                merged_data[i].total_amount = merged_data[i].quantities.reduce((total, quantity) => total + quantity.quantity, 0)
+                merged_data[i].current_playset_amount = Math.min(3, merged_data[i].total_amount)
             }
 
             let card_set_data = []
@@ -103,10 +110,6 @@ export default class CardView extends Component {
             })
 
             this.setState({card_set_data})
-
-            console.log(card_set_data)
-
-            console.log('all merged up')
         }
     }
 
@@ -116,7 +119,6 @@ export default class CardView extends Component {
             {
                 complete: (results) => {
                     this.setState({promo_card_data: results.data})
-                    console.log('promo_data_fetched')
                 }
             }
         )
@@ -125,7 +127,6 @@ export default class CardView extends Component {
             {
                 complete: (results) => {
                     this.setState({collection_data: results.data})
-                    console.log('collection_data_fetched')
                 }
             }
         )
@@ -138,12 +139,23 @@ export default class CardView extends Component {
         //     )
     }
 
+    setDisplayMode = (mode) => {
+        this.setState({display_mode: mode})
+    }
+
+    setScrollPos = (pos) => {
+        let scroll_data = {...this.state.scroll_pos};
+        scroll_data[this.state.display_mode] = pos;
+        this.setState({scroll_pos: scroll_data})
+    }
+
     render() {
         if(!!this.state.card_set_data) {
-
-
-            return <div>
-                <Results card_data={this.state.card_set_data}/>
+            return <div style={{height:'100%'}}>
+                <WantTradeHeader changeDisplay={this.setDisplayMode} displayMode={this.state.display_mode}/>
+                {this.state.display_mode === 'want' && <Results setScrollPos={this.setScrollPos} initialScrollPos={this.state.scroll_pos['want']} cardData={this.state.card_set_data.filter((set) => set.opus === '1' || set.opus === '2')} displayMode={this.state.display_mode}/>}
+                {this.state.display_mode === 'trade' && <Results setScrollPos={this.setScrollPos} initialScrollPos={this.state.scroll_pos['trade']} cardData={this.state.card_set_data.filter((set) => set.opus === '3' || set.opus === '4')} displayMode={this.state.display_mode}/>}
+                {this.state.display_mode === 'trade-down' && <Results setScrollPos={this.setScrollPos} initialScrollPos={this.state.scroll_pos['trade-down']} cardData={this.state.card_set_data.filter((set) => set.opus === '5' || set.opus === '6')} displayMode={this.state.display_mode}/>}
             </div>
         }
         else {
