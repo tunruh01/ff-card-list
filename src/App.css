@@ -106,6 +106,7 @@ div {
   height: 35px;
   background-color: #434650;
   z-index: 5;
+  cursor: pointer;
 }
 
 .header-option {
